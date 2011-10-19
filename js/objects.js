@@ -50,17 +50,21 @@
                 i;
             
             for (i = 0; i < count; i += 1) {
-                player = createPlayer();
+                player = createPlayer(i);
                 arr.push(player);
             }
             return arr;
         };
         
-        createPlayer = function () {
+        createPlayer = function (i) {
             var player = Crafty.e();
-            player.addComponent('2D, Canvas, Color, PlanetMovement')
+            player.addComponent('2D, Canvas, Color, PlanetMovement, Player')
                 .color(srawg.constants.playerColors[Math.floor(Math.random() * srawg.constants.playerColors.length)])
-                .attr({h: srawg.constants.playerSize, w: srawg.constants.playerSize});
+                .attr({h: srawg.constants.playerSize, w: srawg.constants.playerSize})
+                .Player(i + 1);
+            if (i == 0) {
+                player.startTurn();
+            }
             return player;
         };
         

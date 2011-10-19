@@ -15,7 +15,8 @@
         ],
         width: 700,
         height: 700,
-        playerSize: 2
+        playerSize: 2,
+        maxPower: 1000
     };
     
     window.srawg.game = (function () {
