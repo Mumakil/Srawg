@@ -30,7 +30,7 @@
                 speed = (Math.random() * Math.PI * 0.0005 + 0.0005) * srawg.constants.height / 2 / r,
                 planet = Crafty.e();
                 
-            planet.addComponent('2D, Canvas, planet, PlanetMovement')
+            planet.addComponent('2D, Canvas, planet, PlanetMovement, GravitySource')
                 .attr({ 
                     w: size,
                     h: size
@@ -40,7 +40,8 @@
                     r,
                     theta,
                     speed
-                );
+                )
+                .GravitySource(10);
             return planet;
         };
         
@@ -59,7 +60,7 @@
         createPlayer = function (i) {
             var player = Crafty.e();
             player.addComponent('2D, Canvas, Color, PlanetMovement, Player')
-                .color(srawg.constants.playerColors[Math.floor(Math.random() * srawg.constants.playerColors.length)])
+                .color(srawg.constants.playerColors[i])
                 .attr({h: srawg.constants.playerSize, w: srawg.constants.playerSize})
                 .Player(i + 1);
             if (i == 0) {
@@ -71,10 +72,18 @@
         placePlayers = function (players, planets) {
             var i, 
                 player,
-                planet;
+                planet,
+                usedPlanets = {};
             for (i = 0; i < players.length; i += 1) {
+                while (true) {
+                    planet = planets[Math.floor(Math.random() * planets.length)];
+                    if (!usedPlanets[planet[0]]) {
+                        usedPlanets[planet[0]] = true;
+                        break;
+                    }
+                }
                 player = players[i];
-                planet = planets[Math.floor(Math.random() * planets.length)];
+
                 player.PlanetMovement(
                     planet, 
                     planet.attr('w') / 2 + 5, 
@@ -86,8 +95,9 @@
         
         createSun = function () {
             var sun = Crafty.e(),
-                size = Math.floor(40 + Math.random() * 10);
-            sun.addComponent('2D, Canvas, sun')
+                size = Math.floor(40 + Crafty.math.randomInt(0, 10));
+            sun.addComponent('2D, Canvas, sun, GravitySource')
+                .GravitySource(50)
                 .attr({
                     h: size,
                     w: size,
